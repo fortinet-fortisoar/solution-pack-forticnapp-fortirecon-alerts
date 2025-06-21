@@ -1,0 +1,37 @@
+{
+    "name": "laceworkFortiCNAPPFortiReconAlerts",
+    "version": "1.0.0",
+    "fsrMinCompatibility": "7.2.0",
+    "type": "solutionpack",
+    "local": true,
+    "label": "Lacework FortiCNAPP FortiRecon Alerts",
+    "dependencies": [],
+    "prerequisite": null,
+    "publisher": "Community",
+    "description": "Automated tagging of exposed instances for use in Lacework FortiCNAPP Explorer, Policies and Alerts.",
+    "help": null,
+    "category": [
+        "Analytics and SIEM"
+    ],
+    "supportInfo": null,
+    "iconLarge": "fsr-icon-large.png",
+    "postInstallConfig": null,
+    "date": "2025-04-24T20:25:13+00:00",
+    "contents": {
+        "playbooks": [
+            {
+                "name": "10 - SP - Lacework FortiCNAPP FortiRecon Alerts"
+            }
+        ],
+        "connectors": [
+            {
+                "name": "AWS Commands",
+                "apiName": "aws-commands"
+            },
+            {
+                "name": "Fortinet FortiRecon EASM",
+                "apiName": "fortinet-fortirecon-easm"
+            }
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+[
+    {
+        "name": "aws-commands",
+        "label": "AWS Commands",
+        "category": [
+            "IT Services"
+        ],
+        "description": "AWS Commands are used to run AWS native commands for AWS resources configurations directly from FortiSOAR.",
+        "publisher": "Fortinet",
+        "operation_roles": [],
+        "configurations": [],
+        "dataImports": [],
+        "install_mode": "rpm"
+    },
+    {
+        "name": "fortinet-fortirecon-easm",
+        "label": "Fortinet FortiRecon EASM",
+        "category": "Attack Surface Management",
+        "description": "FortiRecon is a Digital Risk Protection Service (DRPS) product that provides an outside-the-network view to the risks posed to your enterprise.",
+        "publisher": null,
+        "operation_roles": [],
+        "configurations": [],
+        "dataImports": [],
+        "install_mode": "rpm"
+    }
+]
