@@ -20,21 +20,71 @@ The **Lacework FortiCNAPP FortiRecon Alerts** solution pack depends on the follo
 For optimal performance of **Lacework FortiCNAPP FortiRecon Alerts** solution pack, you can install and configure the connectors that help with the following:
 
 * **AWS Commands** - Amazon Elastic Compute Cloud (Amazon EC2) provides scalable computing capacity in the Amazon Web Services (AWS) cloud. You can use Amazon EC2 to launch as many or as few virtual servers as you need, configure security and networking, and manage storage.. To configure and use the AWS Commands connector, refer to [Configuring AWS Commands](https://docs.fortinet.com/fortisoar/connectors/aws-commands)
-    * **Permissions**: `s3:GetBucketTagging`, `s3:PutBucketTagging`, `s3:DeleteBucketTagging`  
-    * IAM role example:
+    * **Permissions**: `ec2:CreateTags`  
+    * IAM role for instance tagging example:
         ```json   
         {
             "Version": "2012-10-17",
             "Statement": [
                 {
-                    "Action": [
-                        "s3:GetBucketTagging",
-                        "s3:PutBucketTagging",
-                        "s3:DeleteBucketTagging"
-                    ],
+                "Action": [
+                    "ec2:CreateTags"
+                ],
+                "Effect": "Allow",
+                "Resource": "*",
+                "Condition": {},
+                "Sid": "AllowTagInstances"
+            },
+        }
+        ```
+    
+    * **Permissions**: `see policy below or review fortirecon admin guide for details`
+    * IAM Role for IASM discovery:
+        ```json   
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "FortiReconRead",
                     "Effect": "Allow",
-                    "Resource": "*",
-                    "Sid": "AllowBucketTaggingActions"
+                    "Action": [
+                        "elasticfilesystem:DescribeBackupPolicy",
+                        "elasticfilesystem:DescribeReplicationConfigurations",
+                        "route53:TestDNSAnswer",
+                        "s3:Get*",
+                        "elasticfilesystem:DescribeAccountPreferences",
+                        "s3:List*",
+                        "rds:Describe*",
+                        "resource-groups:GetGroup",
+                        "route53:Get*",
+                        "route53:List*",
+                        "elasticloadbalancing:Describe*",
+                        "apigateway:GET",
+                        "es:Describe*",
+                        "resource-groups:ListGroupResources",
+                        "resource-groups:GetGroupQuery",
+                        "elasticfilesystem:ListTagsForResource",
+                        "elasticfilesystem:DescribeLifecycleConfiguration",
+                        "elasticfilesystem:DescribeFileSystemPolicy",
+                        "elasticfilesystem:DescribeFileSystems",
+                        "elasticfilesystem:DescribeMountTargets",
+                        "es:Get*",
+                        "ec2:Describe*",
+                        "elasticfilesystem:DescribeAccessPoints",
+                        "resource-groups:ListGroups",
+                        "elasticache:Describe*",
+                        "elasticfilesystem:DescribeTags",
+                        "es:List*",
+                        "elasticfilesystem:DescribeMountTargetSecurityGroups",
+                        "cloudfront:List*",
+                        "cloudfront:GetDistributionConfig",
+                        "ecs:Describe*",
+                        "ecs:List*",
+                        "kinesis:List*",
+                        "kinesis:Describe*",
+                        "redshift:Describe*"
+                    ],
+                    "Resource": "*"
                 }
             ]
         }
