@@ -283,7 +283,7 @@
             "name": "Variables",
             "description": null,
             "arguments": {
-                "pullTimeMacro": "FortiCASBkLastPullTime_{{vars['audit_info']['cyops_playbook_iri'].split('\/')[-1].replace('-','_')}}",
+                "pullTimeMacro": "FortiReconLastPullTime_{{vars['audit_info']['cyops_playbook_iri'].split('\/')[-1].replace('-','_')}}",
                 "fortirecon_config": "lwintqsawsciem-4",
                 "fetch_alerts_in_last_X_minutes": "1440"
             },
