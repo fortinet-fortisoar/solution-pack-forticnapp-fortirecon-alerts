@@ -5,11 +5,19 @@
     "type": "solutionpack",
     "local": true,
     "label": "Lacework FortiCNAPP FortiRecon Alerts",
-    "dependencies": [],
+    "dependencies": [
+        {
+            "name": "sOARFramework",
+            "type": "solutionpack",
+            "label": "SOAR Framework",
+            "minVersion": null
+        }
+    ],
     "prerequisite": null,
-    "publisher": "Community",
+    "publisher": "Fortinet",
+    "contributor": "Jamie Mcmurray",
     "description": "Automated tagging of exposed instances for use in Lacework FortiCNAPP Explorer, Policies and Alerts.",
-    "help": null,
+    "help": "https://github.com/fortinet-fortisoar/solution-pack-forticnapp-fortirecon-alerts/blob/release/1.0.0/README.md",
     "category": [
         "Analytics and SIEM"
     ],
