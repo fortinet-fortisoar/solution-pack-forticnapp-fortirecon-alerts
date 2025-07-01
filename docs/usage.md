@@ -1,5 +1,5 @@
-[Home](../README.md) |
- | -------------------------------------------- |
+| [Home](../README.md) |
+| -------------------- |
 
 # Usage
 
@@ -9,4 +9,4 @@ By default the solution pack includes a playbook for FortiRecon Alert tagging of
 
 # Next Steps
 | [Installation](./setup.md#installation) | [Configuration](./setup.md#configuration) | [Contents](./contents.md) |
-| ----------------------------------------- | ------------------------------------------- | --------------------------- |
+| --------------------------------------- | ----------------------------------------- | ------------------------- |

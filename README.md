@@ -14,5 +14,5 @@
 The **Lacework FortiCNAPP FortiRecon Alerts** Solution Pack for FortiSOAR demonstrates an automated aws instance tagging strategy to identify FortiRecon exposed services and surface those in Lacework FortiCNAPP.
 
  # Next Steps
- | [Installation](./docs/setup.md#installation) | [Configuration](./docs/setup.md#configuration) | [Usage](./docs/usage.md) | [Contents](./docs/contents.md) | 
- |--------------------------------------------|----------------------------------------------|------------------------|------------------------------|
+ | [Installation](./docs/setup.md#installation) | [Configuration](./docs/setup.md#configuration) | [Usage](./docs/usage.md) | [Contents](./docs/contents.md) |
+ | -------------------------------------------- | ---------------------------------------------- | ------------------------ | ------------------------------ |
