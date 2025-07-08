@@ -24,7 +24,7 @@ For optimal performance of **Lacework FortiCNAPP FortiRecon Alerts** solution pa
 
 * **AWS Commands** - Amazon Elastic Compute Cloud (Amazon EC2) provides scalable computing capacity in the Amazon Web Services (AWS) cloud. You can use Amazon EC2 to launch as many or as few virtual servers as you need, configure security and networking, and manage storage.. To configure and use the AWS Commands connector, refer to [Configuring AWS Commands](https://docs.fortinet.com/fortisoar/connectors/aws-commands).
 
-This solution pack expects the configuration name to match the AWS Account ID (e.g. `123456789012`). This is because during the parsing of alerts the account id is dynamically extracted and then used to take the tagging action on the identified assets.
+    This solution pack expects the configuration name to match the AWS Account ID (e.g. `123456789012`). This is because during the parsing of alerts the account id is dynamically extracted and then used to take the tagging action on the identified assets.
 
     * **Permissions**: `ec2:CreateTags`  
     * IAM role for instance tagging example:
