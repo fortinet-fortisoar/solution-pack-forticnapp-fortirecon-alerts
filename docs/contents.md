@@ -20,7 +20,7 @@ The **Lacework FortiCNAPP FortiRecon Alerts ** solution pack contains the follow
 
 | Playbook Name | Description |
 | :- | :- |
-| Lacework FortiCNAPP > FortiRecon Issue to Instance Tag.json | Pulls FortiRecon Alerts and Tags AWS EC2 Instances with respective internet exposure tag |
+| Lacework FortiCNAPP > FortiRecon Issue to Instance Tag | Pulls FortiRecon Alerts and Tags AWS EC2 Instances with respective internet exposure tag |
 
 >**Warning:** We recommend that you clone these playbooks before customizing to avoid loss of information while upgrading the solution pack.
 
