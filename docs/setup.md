@@ -17,10 +17,11 @@ The **Lacework FortiCNAPP FortiRecon Alerts** solution pack depends on the follo
 
 
 # Configuration
-For optimal performance of **Lacework FortiCNAPP FortiRecon Alerts** solution pack, you can install and configure the connectors that help with the following:
 
 > [!Important]
 > Before first-use, open the solution pack and modify the `Variables` step. Update the `fortirecon_config` value specifying your FortiRecon connector configuration name, replacing `<YOUR CONNECTOR CONFIG NAME HERE>`.
+
+For optimal performance of **Lacework FortiCNAPP FortiRecon Alerts** solution pack, you can install and configure the connectors that help with the following:
 
 * **AWS Commands** - Amazon Elastic Compute Cloud (Amazon EC2) provides scalable computing capacity in the Amazon Web Services (AWS) cloud. You can use Amazon EC2 to launch as many or as few virtual servers as you need, configure security and networking, and manage storage.. To configure and use the AWS Commands connector, refer to [Configuring AWS Commands](https://docs.fortinet.com/fortisoar/connectors/aws-commands).
 
