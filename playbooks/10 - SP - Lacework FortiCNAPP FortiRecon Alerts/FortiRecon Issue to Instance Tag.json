@@ -284,7 +284,7 @@
             "description": null,
             "arguments": {
                 "pullTimeMacro": "FortiReconLastPullTime_{{vars['audit_info']['cyops_playbook_iri'].split('\/')[-1].replace('-','_')}}",
-                "fortirecon_config": "lwintqsawsciem-4",
+                "fortirecon_config": "<YOUR CONNECTOR CONFIG NAME HERE>",
                 "fetch_alerts_in_last_X_minutes": "1440"
             },
             "status": null,
