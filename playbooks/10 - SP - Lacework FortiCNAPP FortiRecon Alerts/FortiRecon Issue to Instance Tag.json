@@ -4,7 +4,7 @@
     "name": "FortiRecon Issue to Instance Tag",
     "aliasName": null,
     "tag": null,
-    "description": null,
+    "description": "Pulls FortiRecon Alerts and Tags AWS EC2 Instances with respective internet exposure tag",
     "isActive": true,
     "debug": false,
     "singleRecordExecution": false,
@@ -28,7 +28,7 @@
                 },
                 "version": "1.0.0",
                 "for_each": {
-                    "item": "{{ vars.steps.asset }}",
+                    "item": "{{ vars.steps.Get_Assets }}",
                     "parallel": false,
                     "condition": ""
                 },
@@ -39,8 +39,8 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "860",
-            "left": "640",
+            "top": "1260",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
             "uuid": "47a6b733-0a29-4072-9d3a-b24f66dad10e"
@@ -58,7 +58,7 @@
                 },
                 "version": "1.0.0",
                 "for_each": {
-                    "item": "{{ vars.steps.asset }}",
+                    "item": "{{ vars.steps.Get_Assets }}",
                     "parallel": false,
                     "condition": ""
                 },
@@ -69,15 +69,97 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "740",
-            "left": "640",
+            "top": "1120",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
             "uuid": "2e970118-0102-468a-8181-5953cbac39bf"
         },
         {
             "@type": "WorkflowStep",
-            "name": "asset",
+            "name": "Check for Alerts and Activity",
+            "description": null,
+            "arguments": {
+                "conditions": [
+                    {
+                        "option": "Activity Found",
+                        "step_iri": "\/api\/3\/workflow_steps\/d3647386-6f63-4981-bf22-1c272f07a531",
+                        "condition": "{{ vars.steps.Get_Issues.data.hits | length >= 1 }}",
+                        "step_name": "asset"
+                    },
+                    {
+                        "option": "No Issues Found",
+                        "default": true,
+                        "step_iri": "\/api\/3\/workflow_steps\/a53ef592-8e15-4014-864a-d5c5c7e4b9b2",
+                        "step_name": "Update Last Time"
+                    }
+                ],
+                "step_variables": []
+            },
+            "status": null,
+            "top": "840",
+            "left": "218",
+            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+            "group": null,
+            "uuid": "ee070922-c106-4262-b542-635bd8dfa2d5"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Configuration",
+            "description": null,
+            "arguments": {
+                "pullTimeMacro": "FortiReconLastPullTime_{{vars['audit_info']['cyops_playbook_iri'].split('\/')[-1].replace('-','_')}}",
+                "fortirecon_config": "<YOUR CONNECTOR CONFIG NAME HERE>",
+                "fetch_alerts_in_last_X_minutes": "1440"
+            },
+            "status": null,
+            "top": "165",
+            "left": "218",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "ef9fd0d6-2955-4f26-b28a-85896341691e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Create Time Macro",
+            "description": null,
+            "arguments": {
+                "when": "{{vars.steps.Get_Time_Macro_Value.data['hydra:member'] | length == 0}}",
+                "params": {
+                    "macro": "{{vars.pullTimeMacro}}",
+                    "value": "{{arrow.utcnow().shift(minutes=-vars.fetch_alerts_in_last_X_minutes).format('YYYY-MM-DDTHH:mm:ss.ssss')}}Z"
+                },
+                "version": "3.6.0",
+                "connector": "cyops_utilities",
+                "operation": "updatemacro",
+                "operationTitle": "FSR: Create\/Update Global Variables",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "435",
+            "left": "218",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "64e00288-d6c0-45b4-8ea8-971a08d223b3"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Extract Results",
+            "description": null,
+            "arguments": {
+                "last_pull_time": "{% if (vars.steps.Get_Time_Macro_Value.data[\"hydra:member\"] | length) < 1 %}{{arrow.utcnow().shift(minutes=-vars.fetch_alerts_in_last_X_minutes).format('YYYY-MM-DDTHH:mm:ss.ssss')}}Z{% else %}{{vars.steps.Get_Time_Macro_Value.data['hydra:member'][0]['value']}}{% endif %}",
+                "current_timestamp": "{{ arrow.get(arrow.utcnow().int_timestamp).strftime('%Y-%m-%dT%H:%M:%S.%fZ') }}"
+            },
+            "status": null,
+            "top": "570",
+            "left": "218",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "d1293544-0310-49f8-8020-9abc24783256"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Get Assets",
             "description": null,
             "arguments": {
                 "name": "Fortinet FortiRecon EASM",
@@ -96,9 +178,9 @@
                     "groups_match_all": "",
                     "discovered_by_cloud_integration": "True"
                 },
-                "version": "1.1.0",
+                "version": "1.2.0",
                 "for_each": {
-                    "item": "{{ vars.steps.issues.data.hits }}",
+                    "item": "{{ vars.steps.Get_Issues.data.hits }}",
                     "parallel": false,
                     "condition": ""
                 },
@@ -109,81 +191,15 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "620",
-            "left": "640",
+            "top": "1000",
+            "left": "580",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
             "uuid": "d3647386-6f63-4981-bf22-1c272f07a531"
         },
         {
             "@type": "WorkflowStep",
-            "name": "Check for Alerts and Activity",
-            "description": null,
-            "arguments": {
-                "conditions": [
-                    {
-                        "option": "activity found",
-                        "step_iri": "\/api\/3\/workflow_steps\/d3647386-6f63-4981-bf22-1c272f07a531",
-                        "condition": "{{ vars.steps.issues.data.hits | length >= 1 }}",
-                        "step_name": "asset"
-                    },
-                    {
-                        "option": "no issues",
-                        "default": true,
-                        "step_iri": "\/api\/3\/workflow_steps\/a53ef592-8e15-4014-864a-d5c5c7e4b9b2",
-                        "step_name": "Update Last Time"
-                    }
-                ],
-                "step_variables": []
-            },
-            "status": null,
-            "top": "620",
-            "left": "1100",
-            "stepType": "\/api\/3\/workflow_step_types\/12254cf5-5db7-4b1a-8cb1-3af081924b28",
-            "group": null,
-            "uuid": "ee070922-c106-4262-b542-635bd8dfa2d5"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "Extract Results",
-            "description": null,
-            "arguments": {
-                "last_pull_time": "{% if (vars.steps.Get_Macro_Value.data[\"hydra:member\"] | length) < 1%}{{arrow.utcnow().shift(minutes=-vars.fetch_alerts_in_last_X_minutes).format('YYYY-MM-DDTHH:mm:ss.ssss')}}Z{% else %}{{vars.steps.Get_Macro_Value.data['hydra:member'][0]['value']}}{% endif %}",
-                "current_timestamp": "{{ \narrow.get(arrow.utcnow().int_timestamp).strftime('%Y-%m-%dT%H:%M:%S.%fZ') }}"
-            },
-            "status": null,
-            "top": "400",
-            "left": "260",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "d1293544-0310-49f8-8020-9abc24783256"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "Get Macro Value",
-            "description": null,
-            "arguments": {
-                "params": {
-                    "iri": "\/api\/wf\/api\/dynamic-variable\/?name={{vars.pullTimeMacro}}",
-                    "body": "",
-                    "method": "GET"
-                },
-                "version": "3.5.0",
-                "connector": "cyops_utilities",
-                "operation": "make_cyops_request",
-                "operationTitle": "FSR: Make FortiSOAR API Call",
-                "step_variables": []
-            },
-            "status": null,
-            "top": "280",
-            "left": "260",
-            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
-            "group": null,
-            "uuid": "6b16fbf5-8042-4608-9d39-b6730397f6f9"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "issues",
+            "name": "Get Issues",
             "description": null,
             "arguments": {
                 "name": "Fortinet FortiRecon EASM",
@@ -207,7 +223,7 @@
                     "groups_match_all": "",
                     "issue_name_identifier": ""
                 },
-                "version": "1.1.0",
+                "version": "1.2.0",
                 "connector": "fortinet-fortirecon-easm",
                 "operation": "get_issues_discovered",
                 "ignore_errors": false,
@@ -216,11 +232,34 @@
                 "step_variables": []
             },
             "status": null,
-            "top": "500",
-            "left": "640",
+            "top": "705",
+            "left": "218",
             "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
             "group": null,
             "uuid": "603e3f9b-c225-41ca-b931-29cd6fa328b0"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Get Time Macro Value",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "iri": "\/api\/wf\/api\/dynamic-variable\/?name={{vars.pullTimeMacro}}",
+                    "body": "",
+                    "method": "GET"
+                },
+                "version": "3.6.0",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "300",
+            "left": "218",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "6b16fbf5-8042-4608-9d39-b6730397f6f9"
         },
         {
             "@type": "WorkflowStep",
@@ -250,8 +289,8 @@
                 "singleRecordExecution": false
             },
             "status": null,
-            "top": "80",
-            "left": "640",
+            "top": "30",
+            "left": "218",
             "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
             "group": null,
             "uuid": "12a08e86-70a7-4d83-aee1-40f23b7336ef"
@@ -265,34 +304,18 @@
                     "macro": "{{vars.pullTimeMacro}}",
                     "value": "{{vars.current_timestamp}}"
                 },
-                "version": "3.5.0",
+                "version": "3.6.0",
                 "connector": "cyops_utilities",
                 "operation": "updatemacro",
                 "operationTitle": "FSR: Create\/Update Global Variables",
                 "step_variables": []
             },
             "status": null,
-            "top": "980",
-            "left": "640",
+            "top": "1380",
+            "left": "218",
             "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
             "group": null,
             "uuid": "a53ef592-8e15-4014-864a-d5c5c7e4b9b2"
-        },
-        {
-            "@type": "WorkflowStep",
-            "name": "Variables",
-            "description": null,
-            "arguments": {
-                "pullTimeMacro": "FortiReconLastPullTime_{{vars['audit_info']['cyops_playbook_iri'].split('\/')[-1].replace('-','_')}}",
-                "fortirecon_config": "<YOUR CONNECTOR CONFIG NAME HERE>",
-                "fetch_alerts_in_last_X_minutes": "1440"
-            },
-            "status": null,
-            "top": "160",
-            "left": "260",
-            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
-            "group": null,
-            "uuid": "ef9fd0d6-2955-4f26-b28a-85896341691e"
         }
     ],
     "routes": [
@@ -331,7 +354,7 @@
             "name": "Check for Alerts and Activity -> asset",
             "targetStep": "\/api\/3\/workflow_steps\/d3647386-6f63-4981-bf22-1c272f07a531",
             "sourceStep": "\/api\/3\/workflow_steps\/ee070922-c106-4262-b542-635bd8dfa2d5",
-            "label": "activity found",
+            "label": "Activity Found",
             "isExecuted": false,
             "group": null,
             "uuid": "2798e7b0-3887-4594-a36a-ae55f15fed39"
@@ -341,40 +364,60 @@
             "name": "Check for Alerts and Activity -> Update Last Time",
             "targetStep": "\/api\/3\/workflow_steps\/a53ef592-8e15-4014-864a-d5c5c7e4b9b2",
             "sourceStep": "\/api\/3\/workflow_steps\/ee070922-c106-4262-b542-635bd8dfa2d5",
-            "label": "no issues",
+            "label": "No Issues Found",
             "isExecuted": false,
             "group": null,
             "uuid": "64e5685b-349b-4c2d-b921-0c8b8eda8de1"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Extract Results -> issues",
+            "name": "Configuration -> Get Macro Value",
+            "targetStep": "\/api\/3\/workflow_steps\/6b16fbf5-8042-4608-9d39-b6730397f6f9",
+            "sourceStep": "\/api\/3\/workflow_steps\/ef9fd0d6-2955-4f26-b28a-85896341691e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "baf5802b-fdfc-404e-b297-690177da9933"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Create Time Macro -> Extract Results",
+            "targetStep": "\/api\/3\/workflow_steps\/d1293544-0310-49f8-8020-9abc24783256",
+            "sourceStep": "\/api\/3\/workflow_steps\/64e00288-d6c0-45b4-8ea8-971a08d223b3",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7362592e-6f4a-4b37-b7a7-bf41bd345c53"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Extract Results -> Get Issues",
             "targetStep": "\/api\/3\/workflow_steps\/603e3f9b-c225-41ca-b931-29cd6fa328b0",
             "sourceStep": "\/api\/3\/workflow_steps\/d1293544-0310-49f8-8020-9abc24783256",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "f02ce1b9-5649-468d-832f-a5e6e5bcd79d"
+            "uuid": "1514cd23-578c-4eeb-aac7-d794b05fc055"
         },
         {
             "@type": "WorkflowRoute",
-            "name": "Get Macro Value -> Extract Results",
-            "targetStep": "\/api\/3\/workflow_steps\/d1293544-0310-49f8-8020-9abc24783256",
-            "sourceStep": "\/api\/3\/workflow_steps\/6b16fbf5-8042-4608-9d39-b6730397f6f9",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "c8556df2-a5ef-4d96-add0-ac731c9d276b"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "issues -> Check for Alerts and Activity",
+            "name": "Get Issues -> Check for Alerts and Activity",
             "targetStep": "\/api\/3\/workflow_steps\/ee070922-c106-4262-b542-635bd8dfa2d5",
             "sourceStep": "\/api\/3\/workflow_steps\/603e3f9b-c225-41ca-b931-29cd6fa328b0",
             "label": null,
             "isExecuted": false,
             "group": null,
-            "uuid": "63a7d4b0-a005-4691-bba0-cd5c3a833250"
+            "uuid": "44ad58bf-d81e-47e5-b017-25c4c6fbc77c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Macro Value -> Create Time Macro",
+            "targetStep": "\/api\/3\/workflow_steps\/64e00288-d6c0-45b4-8ea8-971a08d223b3",
+            "sourceStep": "\/api\/3\/workflow_steps\/6b16fbf5-8042-4608-9d39-b6730397f6f9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "efa0b62d-d8b6-43e0-a668-127cac832338"
         },
         {
             "@type": "WorkflowRoute",
@@ -385,25 +428,17 @@
             "isExecuted": false,
             "group": null,
             "uuid": "20bab18e-fc5f-4b91-bd2b-dd81fe69ddef"
-        },
-        {
-            "@type": "WorkflowRoute",
-            "name": "Variables -> Get Macro Value",
-            "targetStep": "\/api\/3\/workflow_steps\/6b16fbf5-8042-4608-9d39-b6730397f6f9",
-            "sourceStep": "\/api\/3\/workflow_steps\/ef9fd0d6-2955-4f26-b28a-85896341691e",
-            "label": null,
-            "isExecuted": false,
-            "group": null,
-            "uuid": "85f8357f-a3c2-4284-afab-b70c34b8ae92"
         }
     ],
     "groups": [],
     "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
     "playbookOrigin": "\/api\/3\/picklists\/b6d710a9-a8ec-41ec-8817-fe9fa062fcdd",
-    "isEditable": false,
+    "isEditable": true,
     "uuid": "60bc7e55-1a06-4617-a572-c0057bb8d384",
     "owners": [],
     "isPrivate": false,
     "deletedAt": null,
-    "recordTags": []
+    "recordTags": [
+        "ManualTrigger"
+    ]
 }

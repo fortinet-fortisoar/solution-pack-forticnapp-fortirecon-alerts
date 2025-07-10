@@ -19,7 +19,7 @@ The **Lacework FortiCNAPP FortiRecon Alerts** solution pack depends on the follo
 # Configuration
 
 > [!Important]
-> Before first-use, open the solution pack and modify the `Variables` step. Update the `fortirecon_config` value specifying your FortiRecon connector configuration name, replacing `<YOUR CONNECTOR CONFIG NAME HERE>`.
+> Before first-use, open the solution pack and modify the `Configuration` step. Update the `fortirecon_config` value specifying your FortiRecon connector configuration name, replacing `<YOUR CONNECTOR CONFIG NAME HERE>`.
 
 For optimal performance of **Lacework FortiCNAPP FortiRecon Alerts** solution pack, you can install and configure the connectors that help with the following:
 
