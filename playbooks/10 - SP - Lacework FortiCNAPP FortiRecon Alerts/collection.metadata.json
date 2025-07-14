@@ -1,0 +1,11 @@
+{
+    "@context": "\/api\/3\/contexts\/WorkflowCollection",
+    "@type": "WorkflowCollection",
+    "name": "10 - SP - Lacework FortiCNAPP FortiRecon Alerts",
+    "description": null,
+    "visible": true,
+    "image": null,
+    "uuid": "d46591a0-6e17-4ffd-96df-e7046dc92094",
+    "deletedAt": null,
+    "recordTags": []
+}
